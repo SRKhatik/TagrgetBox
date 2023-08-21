@@ -1,0 +1,89 @@
+/* HiddenSquareGame.css */
+
+.game-container {
+  text-align: center;
+  padding: 20px;
+  border: 2px ridge yellow;
+  border-radius: 20px;
+  background: linear-gradient(45deg, #d994ee,#00ffff, #d994ee);
+  color: #0c0808;
+  padding: 1rem 5rem;
+}
+
+
+.player-info {
+  margin-bottom: 20px;
+}
+
+.scoreboard {
+  margin-bottom: 10px;
+  font-size: 18px;
+  border: 1px solid whitesmoke;
+  border-radius: 10px;
+  background-color: #88ff00;
+  color: black;
+  font-weight: bolder;
+  padding: 1rem;
+
+}
+
+.score {
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
+  margin: 0 auto;
+}
+
+.square {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #080707;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.square.hidden {
+  background-color:#f090f0;
+}
+
+.square.revealed {
+  background-color: #fa1515;
+  color: #f0e8e8;
+  font-weight: bolder;
+  transition: background-color 0.3s ease-in-out;
+}
+h1{
+  color: #080707;
+
+}
+.row {
+  margin-bottom: 10px;
+}
+
+.game-over {
+  font-size: 24px;
+  margin-top: 10px;
+}
+
+.timer {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.reset-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #ff0040;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.reset-button:hover {
+  background-color: #770551;
+}
