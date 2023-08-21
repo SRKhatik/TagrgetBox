@@ -87,3 +87,8 @@ h1{
 .reset-button:hover {
   background-color: #770551;
 }
+ @media (max-width:420px) {
+  h1{
+    font-size: medium;
+  }
+ }

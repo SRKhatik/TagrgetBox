@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { DropdownButton, Dropdown } from "react-bootstrap";
 import "./HiddenSquareGame.css";
 
 const generateRandomPattern = () => {
-  const patterns = ["AAB", "BAA", "ABA"];
+  const patterns = ["ABA", "BAA", "ABA"];
   const randomIndex = Math.floor(Math.random() * patterns.length);
   return patterns[randomIndex].split("");
 };
@@ -19,7 +20,7 @@ const HiddenSquareGame = () => {
   const [playerName, setPlayerName] = useState("");
   const [wins, setWins] = useState(0);
   const [losses, setLosses] = useState(0);
-
+  const [playerWon, setPlayerWon] = useState(false);
   const [boardData, setBoardData] = useState(generateRandomBoardData());
   const [board, setBoard] = useState(
     boardData.map((row) => row.map(() => " "))
@@ -29,8 +30,12 @@ const HiddenSquareGame = () => {
   const [timer, setTimer] = useState(0);
   const [timerStarted, setTimerStarted] = useState(false);
   const [bottomRowOpened, setBottomRowOpened] = useState(false);
+  const [gameLevel, setGamelevel] = useState("Easy");
 
-//time logic 
+  const gameLevelChange=(e)=>{
+    setGamelevel(e);
+  }
+  //time logic
   useEffect(() => {
     if (!gameOver && currentRow < 2 && timerStarted) {
       const interval = setInterval(() => {
@@ -41,12 +46,13 @@ const HiddenSquareGame = () => {
     }
   }, [gameOver, currentRow, timerStarted]);
 
-
-  //alert message 
+  //alert message
   useEffect(() => {
     if (gameOver) {
-      if (currentRow === 2) {
-        alert(`Congratulations, ${playerName}! You won this Game in ${timer} seconds.`);
+      if (playerWon) {
+        alert(
+          `Congratulations, ${playerName}! You won this Game in ${timer} seconds.`
+        );
         handleWin();
       } else {
         alert(`Oops, ${playerName}! You clicked on "B". Please play again.`);
@@ -54,8 +60,6 @@ const HiddenSquareGame = () => {
       }
     }
   }, [gameOver, currentRow, timer, playerName]);
-
-
 
   const handleSquareClick = (rowIndex, columnIndex) => {
     if (gameOver || board[rowIndex][columnIndex] !== " ") return;
@@ -79,10 +83,30 @@ const HiddenSquareGame = () => {
         });
       });
       setBoard(newBoard);
+      setPlayerWon(false);
       setGameOver(true);
       return;
     }
-
+    if (rowIndex === 0) {
+      // Check if the value of the clicked square is "B"
+      if (boardData[0][columnIndex] === "A") {
+        // The player wins
+        setPlayerWon(true);
+        setGameOver(true);
+        return;
+      } else {
+        // The player loses
+        setPlayerWon(false);
+        newBoard.forEach((row, rIndex) => {
+          row.forEach((value, cIndex) => {
+            newBoard[rIndex][cIndex] = boardData[rIndex][cIndex];
+          });
+        });
+        setBoard(newBoard);
+        setGameOver(true);
+        return;
+      }
+    }
     if (
       rowIndex === 2 ||
       (rowIndex === 1 && boardData[rowIndex][columnIndex] === "A")
@@ -97,8 +121,8 @@ const HiddenSquareGame = () => {
 
     setBoard(newBoard);
   };
-  
-//reset the game 
+
+  //reset the game
   const resetGame = () => {
     const newBoardData = generateRandomBoardData();
     setBoardData(newBoardData);
@@ -122,13 +146,15 @@ const HiddenSquareGame = () => {
     <div className="game-container">
       <h1>Target🎯Box</h1>
       <div className="player-info">
-        <labelv htmlFor="playerName" style={{fontWeight:"bolder"}}> Player Name :-</labelv>
+        <labelv htmlFor="playerName" style={{ fontWeight: "bolder" }}>
+          Player Name :-
+        </labelv>
         <input
           type="text"
           id="playerName"
           value={playerName}
           onChange={(e) => setPlayerName(e.target.value)}
-          style={{background:"transparent",padding:"5px",color:"#000"}}
+          style={{ background: "transparent", padding: "5px", color: "#000" }}
         />
       </div>
       <div className="scoreboard">
@@ -139,7 +165,7 @@ const HiddenSquareGame = () => {
       </div>
       <div className="timer">Time: {timer} seconds</div>
       {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="row">
+        <div key={rowIndex} className="col">
           {row.map((value, columnIndex) => (
             <div
               key={columnIndex}
@@ -156,6 +182,17 @@ const HiddenSquareGame = () => {
           {currentRow === 2 ? "You won!" : "Game over"}
         </div>
       )}
+      <div className="pb-2">
+        <DropdownButton
+          id="dropdown-basic-button"
+          title={gameLevel}
+          onSelect={gameLevelChange}
+        >
+          <Dropdown.Item eventKey="Easy">Easy</Dropdown.Item>
+          <Dropdown.Item eventKey="Medium">Medium</Dropdown.Item>
+          <Dropdown.Item eventKey="Hard">Hard</Dropdown.Item>
+        </DropdownButton>
+      </div>
       <button className="reset-button" onClick={resetGame}>
         Play Again
       </button>
